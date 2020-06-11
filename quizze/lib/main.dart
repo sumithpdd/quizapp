@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-         primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(title: 'Flutter Demo Home Page'),
     );
@@ -30,7 +30,23 @@ class HomePage extends StatelessWidget {
           // the App.build method, and use it to set our appbar title.
           title: Text(title),
         ),
-        body: Center());
+        body: _MyFirstWidget(
+          color: Colors.blue,
+        ));
   }
 }
- 
+
+class _MyFirstWidget extends StatelessWidget {
+  const _MyFirstWidget({Key key, this.color}) : super(key: key);
+  final color;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 50,
+        height: 50,
+        color: color,
+      ),
+    );
+  }
+}
