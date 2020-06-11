@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 
 void main() {
   runApp(MyApp());
@@ -30,42 +32,10 @@ class HomePage extends StatelessWidget {
           // the App.build method, and use it to set our appbar title.
           title: Text(title),
         ),
-        body: _MyFirstWidget());
+        body: Center(
+          child: Platform.isAndroid?
+          Switch(value: true,onChanged: (v)=>null,):
+          CupertinoSwitch(value: true,onChanged: (v)=>null,),
+        ));
   }
-}
-
-class _MyFirstWidget extends StatefulWidget {
-  const _MyFirstWidget({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  __MyFirstWidgetState createState() => __MyFirstWidgetState();
-}
-
-class __MyFirstWidgetState extends State<_MyFirstWidget> {
-  int count = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: FlatButton(
-        child: Text('$count'),
-        onPressed: () {
-          setState(() {
-            count++;
-          });
-        },
-      ),
-    );
-  }
-}
+} 

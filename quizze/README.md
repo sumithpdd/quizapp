@@ -22,3 +22,7 @@ TOP - MaterialApp
 BuildContext - where the widget lives in the application tree.
 InitState
 Dispose
+
+## Material VS Cupertino
+
+import 'dart:io' show Platform;
