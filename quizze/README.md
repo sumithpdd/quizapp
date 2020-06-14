@@ -25,4 +25,12 @@ Dispose
 
 ## Material VS Cupertino
 
+```Dart
 import 'dart:io' show Platform;
+```
+
+## Project organization
+
+- screens/ contains the app’s main UI features.
+- shared/ contains the app’s shared UI, like navigation menus and loading indicators.
+- services/ contains the app’s shared business logic, like user auth and database code.
