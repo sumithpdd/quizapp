@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:provider/provider.dart';
+import 'package:quizze/services/auth.dart';
 import 'package:quizze/shared/bottom_nav.dart';
 import 'screens/screens.dart';
 
@@ -14,31 +17,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+    return MultiProvider(
+      providers: [
+        StreamProvider<FirebaseUser>.value(
+          value: AuthService().user,
+        ),
       ],
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          fontFamily: 'Nunito',
-          bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.black87,
-          ),
-          brightness: Brightness.dark,
-          textTheme: TextTheme(
-            body1: TextStyle(fontSize: 18),
-            body2: TextStyle(fontSize: 16),
-            button: TextStyle(letterSpacing: 1.2, fontWeight: FontWeight.bold),
-            headline: TextStyle(fontWeight: FontWeight.bold),
-            subhead: TextStyle(color: Colors.grey),
-          )),
-      home: HomePage(title: 'Flutter Demo Home Page'),
-      routes: {
-        '/login': (context) => LoginScreen(),
-        '/topics': (context) => TopicsScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/about': (context) => AboutScreen(),
-      },
+      child: MaterialApp(
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+        ],
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            fontFamily: 'Nunito',
+            bottomAppBarTheme: BottomAppBarTheme(
+              color: Colors.black87,
+            ),
+            brightness: Brightness.dark,
+            textTheme: TextTheme(
+              body1: TextStyle(fontSize: 18),
+              body2: TextStyle(fontSize: 16),
+              button:
+                  TextStyle(letterSpacing: 1.2, fontWeight: FontWeight.bold),
+              headline: TextStyle(fontWeight: FontWeight.bold),
+              subhead: TextStyle(color: Colors.grey),
+            )),
+        home: HomePage(title: 'Flutter Demo Home Page'),
+        routes: {
+          '/login': (context) => LoginScreen(),
+          '/topics': (context) => TopicsScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/about': (context) => AboutScreen(),
+        },
+      ),
     );
   }
 }
