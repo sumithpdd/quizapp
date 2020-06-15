@@ -2,8 +2,8 @@ import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:quizze/services/auth.dart';
+import '../services/services.dart';
+import 'package:apple_sign_in/apple_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   createState() => LoginScreenState();
@@ -49,12 +49,12 @@ class LoginScreenState extends State<LoginScreen> {
               color: Colors.black45,
               loginMethod: auth.googleSignIn,
             ),
-            FutureBuilder(
+            FutureBuilder<Object>(
               future: auth.appleSignInAvailable,
               builder: (context, snapshot) {
                 if (snapshot.data == true) {
                   return AppleSignInButton(
-                    onPressed: () async {
+                    onPressed: () async { 
                       FirebaseUser user = await auth.appleSignIn();
                       if (user != null) {
                         Navigator.pushReplacementNamed(context, '/topics');

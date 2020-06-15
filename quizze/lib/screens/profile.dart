@@ -1,13 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/services.dart';
+import '../shared/shared.dart';
 import 'package:provider/provider.dart';
-import 'package:quizze/services/auth.dart';
 
 class ProfileScreen extends StatelessWidget {
   final AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    Report report = Provider.of<Report>(context);
     FirebaseUser user = Provider.of<FirebaseUser>(context);
 
     if (user != null) {
@@ -36,6 +38,12 @@ class ProfileScreen extends StatelessWidget {
               ),
             Text(user.email ?? '', style: Theme.of(context).textTheme.headline),
             Spacer(),
+            if (report != null)
+              Text('${report.total ?? 0}',
+                  style: Theme.of(context).textTheme.display3),
+            Text('Quizzes Completed',
+                style: Theme.of(context).textTheme.subhead),
+            Spacer(),
             FlatButton(
                 child: Text('logout'),
                 color: Colors.red,
@@ -49,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
     } else {
-      return Text('not logged in...');
+      return LoadingScreen();
     }
   }
 

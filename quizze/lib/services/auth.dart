@@ -1,7 +1,8 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -14,7 +15,41 @@ class AuthService {
   // Firebase user a realtime stream
   Stream<FirebaseUser> get user => _auth.onAuthStateChanged;
 
- 
+  // Determine if Apple Signin is available on device
+  Future<bool> get appleSignInAvailable => AppleSignIn.isAvailable();
+
+  /// Sign in with Apple
+  Future<FirebaseUser> appleSignIn() async {
+    try {
+      final AuthorizationResult appleResult =
+          await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+
+      if (appleResult.error != null) {
+        // handle errors from Apple
+      }
+
+      final AuthCredential credential =
+          OAuthProvider(providerId: 'apple.com').getCredential(
+        accessToken:
+            String.fromCharCodes(appleResult.credential.authorizationCode),
+        idToken: String.fromCharCodes(appleResult.credential.identityToken),
+      );
+
+      AuthResult firebaseResult = await _auth.signInWithCredential(credential);
+      FirebaseUser user = firebaseResult.user;
+
+      // Update user data
+      updateUserData(user);
+
+      return user;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   /// Sign in with Google
   Future<FirebaseUser> googleSignIn() async {
     try {
@@ -60,40 +95,5 @@ class AuthService {
   // Sign out
   Future<void> signOut() {
     return _auth.signOut();
-  }
-
-  // Determine if Apple SignIn is available
-  Future<bool> get appleSignInAvailable => AppleSignIn.isAvailable();
-
-  /// Sign in with Apple
-  Future<FirebaseUser> appleSignIn() async {
-    try {
-      final AuthorizationResult appleResult =
-          await AppleSignIn.performRequests([
-        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-      ]);
-
-      if (appleResult.error != null) {
-        // handle errors from Apple here
-      }
-
-      final AuthCredential credential =
-          OAuthProvider(providerId: 'apple.com').getCredential(
-        accessToken:
-            String.fromCharCodes(appleResult.credential.authorizationCode),
-        idToken: String.fromCharCodes(appleResult.credential.identityToken),
-      );
-
-      AuthResult firebaseResult = await _auth.signInWithCredential(credential);
-      FirebaseUser user = firebaseResult.user;
-
-      // Optional, Update user data in Firestore
-      updateUserData(user);
-
-      return user;
-    } catch (error) {
-      print(error);
-      return null;
-    }
   }
 }
